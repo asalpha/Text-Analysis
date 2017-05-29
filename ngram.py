@@ -34,7 +34,7 @@ def get_data(input_filename, max_ngram):
 	csv_read = csv.reader(read_file)
 	write_file = open(input_filename + '_ngarms' + '.csv', 'w', newline='', encoding="latin1")
 	csv_write = csv.writer(write_file)
-	sheet_data = extract_rows(csv_read)
+	sheet_data = extract_rows(csv_read)[1:]
 	header = []
 	new_data = []
 	while (max_ngram > 0):
@@ -51,7 +51,7 @@ def get_data(input_filename, max_ngram):
     	
 
 # caller command, contains the path to the source file and max ngram required
-get_data(path, 6)
+get_data("\\\\officescchome28.office.adroot.bmogc.net\scc28userdata$\\asaee01\home\Python Scripts\Text Analysis\\new", 7)
 
 
 
