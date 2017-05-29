@@ -1,20 +1,60 @@
-# let q be the number of n grams in a sentence containing x words, then
-# q = x - (n - 1)
-
-# from nltk.tokenize import word_tokenize
-
-# text = "I am aware that nltk only offers bigrams and trigrams, but is there a way to split my text in four-grams, five-grams or even hundred-grams"
-# tokenize = word_tokenize(text)
-# print(tokenize[2])
-
-# # ['I', 'am', 'aware', 'that', 'nltk', 'only', 'offers', 'bigrams', 'and', 'trigrams', ',', 'but', 'is', 'there', 'a', 'way', 'to', 'split', 'my', 'text', 'in', 'four-grams', ',', 'five-grams', 'or', 'even', 'hundred-grams']
-# # >>> bigrams = ngrams(tokenize,2)
-# # >>> bigrams
-# # [('I', 'am'), ('am', 'aware'), ('aware', 'that'), ('that', 'nltk'), ('nltk', 'only'), ('only', 'offers'), ('offers', 'bigrams'), ('bigrams', 'and'), ('and', 'trigrams'), ('trigrams', ','), (',', 'but'), ('but', 'is'), ('is', 'there'), ('there', 'a'), ('a', 'way'), ('way', 'to'), ('to', 'split'), ('split', 'my'), ('my', 'text'), ('text', 'in'), ('in', 'four-grams'), ('four-grams', ','), (',', 'five-grams'), ('five-grams', 'or'), ('or', 'even'), ('even', 'hundred-grams')]
-# # >>> trigrams=ngrams(tokenize,3)
-# # >>> trigrams
-# # [('I', 'am', 'aware'), ('am', 'aware', 'that'), ('aware', 'that', 'nltk'), ('that', 'nltk', 'only'), ('nltk', 'only', 'offers'), ('only', 'offers', 'bigrams'), ('offers', 'bigrams', 'and'), ('bigrams', 'and', 'trigrams'), ('and', 'trigrams', ','), ('trigrams', ',', 'but'), (',', 'but', 'is'), ('but', 'is', 'there'), ('is', 'there', 'a'), ('there', 'a', 'way'), ('a', 'way', 'to'), ('way', 'to', 'split'), ('to', 'split', 'my'), ('split', 'my', 'text'), ('my', 'text', 'in'), ('text', 'in', 'four-grams'), ('in', 'four-grams', ','), ('four-grams', ',', 'five-grams'), (',', 'five-grams', 'or'), ('five-grams', 'or', 'even'), ('or', 'even', 'hundred-grams')]
-# # >>> fourgrams=ngrams(tokenize,4)
-# # >>> fourgrams
-# # [('I', 'am', 'aware', 'that'), ('am', 'aware', 'that', 'nltk'), ('aware', 'that', 'nltk', 'only'), ('that', 'nltk', 'only', 'offers'), ('nltk', 'only', 'offers', 'bigrams'), ('only', 'offers', 'bigrams', 'and'), ('offers', 'bigrams', 'and', 'trigrams'), ('bigrams', 'and', 'trigrams', ','), ('and', 'trigrams', ',', 'but'), ('trigrams', ',', 'but', 'is'), (',', 'but', 'is', 'there'), ('but', 'is', 'there', 'a'), ('is', 'there', 'a', 'way'), ('there', 'a', 'way', 'to'), ('a', 'way', 'to', 'split'), ('way', 'to', 'split', 'my'), ('to', 'split', 'my', 'text'), ('split', 'my', 'text', 'in'), ('my', 'text', 'in', 'four-grams'), ('text', 'in', 'four-grams', ','), ('in', 'four-grams', ',', 'five-grams'), ('four-grams', ',', 'five-grams', 'or'), (',', 'five-grams', 'or', 'even'), ('five-grams', 'or', 'even', 'hundred-grams')]
+from nltk.tokenize import word_tokenize
+from nltk.util import ngrams
+import csv
 import nltk
+from itertools import zip_longest
+
+# Return n word grams according to the given text
+def get_ngrams(text, n ):
+    n_grams = ngrams(word_tokenize(text), n)
+    return [ ' '.join(grams) for grams in n_grams]
+  
+# Extract rows from sheet_data and returns a matrix version containing
+# list of lists
+def extract_rows(sheet_data):
+    lst = []
+    for row in sheet_data:
+        lst.append(row)
+    return lst
+
+#transposes a list of lists
+def transposed(lists, defval=0):
+   return list(zip_longest(*lists))
+
+# writes data in a csv row by row with header head
+def writecsv(head, data, wfile):
+	wfile.writerow(head)
+	for r in data:
+		wfile.writerow(r)
+
+# Main Function: reads data from giving csv and creates a new sheet
+# containg 1 to max_ngrams 
+def get_data(input_filename, max_ngram):
+	read_file = open(input_filename + '.csv', 'r', encoding="latin1")
+	csv_read = csv.reader(read_file)
+	write_file = open(input_filename + '_ngarms' + '.csv', 'w', newline='', encoding="latin1")
+	csv_write = csv.writer(write_file)
+	sheet_data = extract_rows(csv_read)
+	header = []
+	new_data = []
+	while (max_ngram > 0):
+		header.append(str(max_ngram) + '_gram')
+		temp = []
+		for row in sheet_data:
+			if (len(row[3].split(' ')) < max_ngram): continue
+			temp += get_ngrams(row[3], max_ngram)
+		new_data.append(temp)
+		max_ngram -= 1
+	writecsv(header, list(transposed(new_data)), csv_write)
+	read_file.close()
+	write_file.close()
+    	
+
+# caller command, contains the path to the source file and max ngram required
+get_data(path, 6)
+
+
+
+
+
+
