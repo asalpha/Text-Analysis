@@ -39,13 +39,16 @@ def transposed(lists, defval=0):
 def writecsv(head, data, wfile):
 	wfile.writerow(head)
 	for r in data:
+		print('Almost Done....')
+		print('----------------')
 		wfile.writerow(r)
 
 
 def FindGram(p, key, list):
 	match = []
 	for l in list:
-		match.append([s for s in l if key in s])
+		str = [s for s in l if key in s]
+		match.append(str)
 	return match
 
 
@@ -59,7 +62,10 @@ def MakeGram(pre, NGL):
 	all = []
 	# print(NGL[0][0])
 	for OneGram in  NGL[0]:
-		MatchingGrams = FindGram(pre, OneGram, NGL)
+		MatchingGrams = FindGram(pre, OneGram, NGL[1:])
+		MatchingGrams = [[OneGram]] + MatchingGrams
+		print(MatchingGrams)
+		print('----------------')
 		MakeRow = transposed(MatchingGrams)
 		track = 0
 		for i in MakeRow:
@@ -70,6 +76,7 @@ def MakeGram(pre, NGL):
 			# print(i)
 		# print(MakeRow)
 		# all += MakeRow
+	print('Working.....')
 	print('----------------')
 	# print(all)
 	return all
@@ -92,14 +99,16 @@ def get_data(input_filename, max_ngram):
 		#temp.append(str(count))
 		temp += row[1:5]
 		NgramList = get_ngramlist(row[4],max_ngram)
+		# csv_write.writerow(NgramList)
 		new_data += MakeGram(temp, NgramList)
 	writecsv(head, new_data, csv_write)
+	print('Your New File is Ready!')
 	read_file.close()
 	write_file.close()
     	
 
 # caller command, contains the path to the source file and max ngram required
-get_data("\\\\officescchome28.office.adroot.bmogc.net\scc28userdata$\\asaee01\home\Python Scripts\Text Analysis\\Total", 7)
+get_data("\\\\officescchome28.office.adroot.bmogc.net\scc28userdata$\\asaee01\home\Python Scripts\\abc", 7)
 
 
 
