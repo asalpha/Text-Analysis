@@ -64,8 +64,8 @@ def MakeGram(pre, NGL):
 	for OneGram in  NGL[0]:
 		MatchingGrams = FindGram(pre, OneGram, NGL[1:])
 		MatchingGrams = [[OneGram]] + MatchingGrams
-		print(MatchingGrams)
-		print('----------------')
+		# print(MatchingGrams)
+		# print('----------------')
 		MakeRow = transposed(MatchingGrams)
 		track = 0
 		for i in MakeRow:
@@ -108,7 +108,7 @@ def get_data(input_filename, max_ngram):
     	
 
 # caller command, contains the path to the source file and max ngram required
-get_data("\\\\officescchome28.office.adroot.bmogc.net\scc28userdata$\\asaee01\home\Python Scripts\\abc", 7)
+get_data("\\\\officescchome28.office.adroot.bmogc.net\scc28userdata$\\asaee01\home\Text Analysis for top 3 Products\Outlook 2010", 7)
 
 
 
