@@ -44,11 +44,15 @@ def writecsv(head, data, wfile):
 		wfile.writerow(r)
 
 
-def FindGram(p, key, list):
+def FindGram(p, key, lst):
 	match = []
-	for l in list:
-		str = [s for s in l if key in s]
+	for l in lst:
+		# str = [s for s in l if key in s]
+		str = [s for s in l if key in list(s.split(' '))]
+		# str = [key == s for s in l]
 		match.append(str)
+	# print(match)
+	# print('--------------------')
 	return match
 
 
@@ -108,7 +112,7 @@ def get_data(input_filename, max_ngram):
     	
 
 # caller command, contains the path to the source file and max ngram required
-get_data("\\\\officescchome28.office.adroot.bmogc.net\scc28userdata$\\asaee01\home\Text Analysis for top 3 Products\Outlook 2010", 7)
+get_data("\\\\officescchome28.office.adroot.bmogc.net\scc28userdata$\\asaee01\home\Text Analysis for top 3 Products\\new\\Windows 7", 7)
 
 
 
