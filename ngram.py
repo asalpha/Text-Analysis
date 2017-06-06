@@ -16,7 +16,6 @@ def get_ngramlist(text, n ):
 		n_grams = ngrams(word_tokenize(text), x)
 		NgLst.append(list([ ' '.join(grams) for grams in n_grams]))
 		x += 1
-	# print(NgLst)
 	return NgLst
    
 # Extract rows from sheet_data and returns a matrix version containing
@@ -44,45 +43,28 @@ def writecsv(head, data, wfile):
 		wfile.writerow(r)
 
 
+# Searches through a list of (n-1)-Grams and returns a list of
+# n-grams containing the Key
 def FindGram(p, key, lst):
 	match = []
 	for l in lst:
-		# str = [s for s in l if key in s]
 		str = [s for s in l if key in list(s.split(' '))]
-		# str = [key == s for s in l]
 		match.append(str)
-	# print(match)
-	# print('--------------------')
 	return match
 
-
-
-# def MakeRow(key, prefix, lookup):
-	
-
-
-
+# Creates a list of o
 def MakeGram(pre, NGL):
 	all = []
-	# print(NGL[0][0])
 	for OneGram in  NGL[0]:
 		MatchingGrams = FindGram(pre, OneGram, NGL[1:])
 		MatchingGrams = [[OneGram]] + MatchingGrams
-		# print(MatchingGrams)
-		# print('----------------')
 		MakeRow = transposed(MatchingGrams)
-		track = 0
 		for i in MakeRow:
 			if i[0] == None:
 				i[0] = OneGram
 			all.append(pre + i)
-			track += 1
-			# print(i)
-		# print(MakeRow)
-		# all += MakeRow
 	print('Working.....')
 	print('----------------')
-	# print(all)
 	return all
 
 
@@ -112,7 +94,7 @@ def get_data(input_filename, max_ngram):
     	
 
 # caller command, contains the path to the source file and max ngram required
-get_data("\\\\officescchome28.office.adroot.bmogc.net\scc28userdata$\\asaee01\home\Text Analysis for top 3 Products\\new\\Windows 7", 7)
+get_data("\\\\officescchome28.office.adroot.bmogc.net\scc28userdata$\\asaee01\home\Text Analysis for top 3 Products\\new\\Active Directory", 7)
 
 
 
