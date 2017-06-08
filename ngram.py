@@ -2,14 +2,16 @@ from nltk.tokenize import word_tokenize
 from nltk.util import ngrams
 import csv
 import nltk
-from itertools import zip_longest
+
+
+
+# Visualizing the dictionaries! (For Testing Purposes)
+#####################################################################
 import uuid
 import tkinter as tk
 from tkinter import ttk
-import pandas as pd
 
-# Visualizing the dictionaries!
-#####################################################################
+
 def j_tree(tree, parent, dic):
     for key in sorted(dic.keys()):
         uid = uuid.uuid4()
@@ -54,11 +56,16 @@ def tk_tree_view(data):
     root.minsize(root.winfo_reqwidth(), root.winfo_reqheight())
     root.mainloop()
 
-#Caller: tk_tree_view(data)
+# Caller: 
+# tk_tree_view(data)
 #####################################################################
 
 
 
+# Implementation
+#####################################################################
+
+# Header for the csv
 head = ['Incident Ticket Number','Incident Service Type','Original Summary','Stemmed Summary','1-Gram','2-Gram','3-Gram','4-Gram','5-Gram','6-Gram','7-Gram',]
 
 
@@ -72,14 +79,15 @@ def get_ngramlist(text, n):
 		x += 1
 	return NgLst
 
+
 # Extract rows from sheet_data and returns a matrix version containing
 # list of lists
 def extract_rows(sheet_data):
     lst = []
     for row in sheet_data:
-        lst.append(row)
+    	print("Extracting Data....")
+    	lst.append(row)
     return lst
-
 
 
 # writes data in a csv row by row with header head
@@ -91,100 +99,55 @@ def writecsv(head, data, wfile):
 		wfile.writerow(r)
 
 
-# Searches through a list of (n-1)-Grams and returns a list of
+# Searches through a list of n-Grams and returns a list of
 # n-grams containing the Key
 def FindGram(key, lst):
-	print("##########################")
-	print(len(list(key.split(' '))))
-	print("##########################")
 	match = []
-
 	for l in lst:
-		print('@@@@@@@@@@@@@')
-		print(str(l))
-		print('@@@@@@@@@@@@@')
 		if len(list(key.split(' '))) == 1:
 			if key in list(l.split(' ')):
 				match.append(l)
-		# str = [s for s in l if key in s]
 		else:
 			if key in l:
 				match.append(l)
 	return match
 
-# Creates a list of o
+
+# Creates a dictionary tree of all the n-grams. You can view the dictionary using the
+# "Visualizing the Dictionary" code above
 def MakeGram(pre, NGL, q):
-	print(pre)
 	if len(NGL) <= q+1:
 		return {}
 	for NthGram in  pre:
-		print(NGL[q+1])
+		print("Finding Relations Between Grams....")
 		log = FindGram(str(NthGram), NGL[q+1])
-		# pre[NthGram] = 1
-		print('=============')
-		print(log)
 		temp = MakeGram(dict.fromkeys(log, None), NGL, q+1)
-		print(temp)
 		pre[NthGram] = temp
-		# pre[NthGram] = MakeGram(dict(log), NGL, q+1)
-		# dict.fromkeys(abcd[0], None)
-	# print(pre)
 	return pre
 
 
-
-global loe
-loe = []
-
-
+# Converts the dictionary into a list of list to be written onto the csv
 def d2l(d, cur=()):
     if not d:
         yield list(cur)
     else:
         for n, s in d.items():
             for log in d2l(s, cur+(n,)):
-                yield list(log)
+            	yield list(log)
 
 
+# Adds then Incident Number 
 def AddINC(INC,LoL):
 	r = []
 	for L in LoL:
+		print('Making Sure data is accurate...')
 		r.append(INC + L)
 	return r
 
 
-
-# Testing!
-###################################################################
-
-# abcd = get_ngramlist("I have something to say", 7)
-# x = dict.fromkeys(abcd[0], None)
-# g = MakeGram(x, abcd, 0)
-# print('AAAAAANNNNNNNSSSSSS')
-# print(g)
-# tk_tree_view(g)
-# print("$$$$$$$$$$$$$$$$$$$$$$$$$$")
-# lolod = list(d2l(g))
-# print(lolod)
-# p = "\\\\officescchome28.office.adroot.bmogc.net\scc28userdata$\\asaee01\home\Text Analysis for top 3 Products\\new\\checking.csv"
-# wrte = open(p,'w',newline='',encoding='latin1')
-# w = csv.writer(wrte)
-# writecsv(head, lolod, w)
-# print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-# for a in loe:
-# 	print(str(a))
-###################################################################
-
-
-
-
-
-
-
-
 # Main Function: reads data from giving csv and creates a new sheet
 # containg 1 to max_ngrams 
-def get_data(input_filename, max_ngram):
+def Start_Process(input_filename, max_ngram):
 	read_file = open(input_filename + '.csv', 'r', encoding="latin1")
 	csv_read = csv.reader(read_file)
 	write_file = open(input_filename + '_ngarms' + '.csv', 'w', newline='', encoding="latin1")
@@ -206,8 +169,28 @@ def get_data(input_filename, max_ngram):
     	
 
 # caller command; contains the path to the source file and max ngram required
-get_data("\\\\officescchome28.office.adroot.bmogc.net\scc28userdata$\\asaee01\home\Text Analysis for top 3 Products\\new\\bug fix", 7)
+Start_Process("\\\\officescchome28.office.adroot.bmogc.net\scc28userdata$\\asaee01\home\Text Analysis for top 3 Products\\new\\Windows 7", 7)
 
 
 
+# Testing! (Please Ignore)
+###################################################################
+# abcd = get_ngramlist("I have something to say", 7)
+# x = dict.fromkeys(abcd[0], None)
+# g = MakeGram(x, abcd, 0)
+# print('AAAAAANNNNNNNSSSSSS')
+# print(g)
+# tk_tree_view(g)
+# print("$$$$$$$$$$$$$$$$$$$$$$$$$$")
+# lolod = list(d2l(g))
+# print(lolod)
+# p = "\\\\officescchome28.office.adroot.bmogc.net\scc28userdata$\\asaee01\home\Text Analysis for top 3 Products\\new\\checking.csv"
+# wrte = open(p,'w',newline='',encoding='latin1')
+# w = csv.writer(wrte)
+# writecsv(head, lolod, w)
+# print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+# for a in loe:
+# 	print(str(a))
+###################################################################
 
+# Contact Ali if you need help regarding this script!
